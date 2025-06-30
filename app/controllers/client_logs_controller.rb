@@ -1,28 +1,40 @@
+require 'csv'
+require 'httparty'
+
 class ClientLogsController < ApplicationController
   def sync
-    # ...APIから取得...
+    api_key = ENV['MERAKI_API_KEY']
+    headers = {
+      "X-Cisco-Meraki-API-Key" => api_key,
+      "Content-Type" => "application/json"
+    }
 
-    all_logs = []
+    # まずAP一覧をCSVから読み込み
+    access_points = CSV.read("storage/meraki_data/access_points.csv", headers: true)
 
-    AccessPointsController.load_access_points.each do |ap|
-      url = "https://api.meraki.com/api/v1/devices/#{ap["serial"]}/clients"
-      response = HTTParty.get(url, headers: headers)
-      clients = response.parsed_response
+    CSV.open("storage/meraki_data/client_logs.csv", "w") do |csv|
+      csv << %w[access_point_serial mac ip last_seen usage]
 
-      logs = clients.map do |c|
-        {
-          access_point_serial: ap["serial"],
-          mac: c["mac"],
-          ip: c["ip"],
-          last_seen: c["lastSeen"],
-          usage: c["usage"]&.dig("total") || 0
-        }
+      access_points.each do |ap|
+        url = "https://api.meraki.com/api/v1/devices/#{ap['serial']}/clients"
+        response = HTTParty.get(url, headers: headers)
+
+        # エラー時は空配列扱いにするなどの例外処理は必要に応じて追加
+        clients = response.parsed_response || []
+
+        clients.each do |c|
+          csv << [
+            ap['serial'],
+            c["mac"],
+            c["ip"],
+            c["lastSeen"],
+            c["usage"]&.dig("total") || 0
+          ]
+        end
       end
-
-      all_logs += logs
     end
 
-    File.write("storage/meraki_data/client_logs.json", JSON.pretty_generate(all_logs))
-    render json: { status: "ok", total_logs: all_logs.size }
+    render json: { status: "ok", message: "クライアント情報をCSVに保存しました" }
   end
+
 end

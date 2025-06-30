@@ -1,0 +1,9 @@
+<h1 class="text-2xl font-bold mb-4">APごとの接続クライアント数</h1>
+<%= column_chart @ap_counts, height: "400px", library: { title: { text: "接続数", fontSize: 20 } } %>
+
+<h2 class="text-xl font-bold mt-8">時系列通信量グラフ</h2>
+
+<% @ap_timeseries.each do |ap_name, data| %>
+  <h3 class="mt-4 text-lg font-semibold"><%= ap_name %></h3>
+  <%= line_chart data, height: "300px", library: { title: "通信量の推移 (bytes)" } %>
+<% end %>

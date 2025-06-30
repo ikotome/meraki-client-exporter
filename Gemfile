@@ -67,3 +67,4 @@ gem 'dotenv-rails'  # APIキー管理
 gem 'chartkick'
 gem 'groupdate'  # 時系列グラフ用に便利
 gem 'csv'  # CSV操作用
+gem "tailwindcss-rails"
