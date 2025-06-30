@@ -61,3 +61,9 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem 'httparty'      # Meraki API用
+gem 'dotenv-rails'  # APIキー管理
+gem 'chartkick'
+gem 'groupdate'  # 時系列グラフ用に便利
+gem 'csv'  # CSV操作用
