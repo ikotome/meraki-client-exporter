@@ -1,9 +1,9 @@
-require 'csv'
-require 'httparty'
+require "csv"
+require "httparty"
 
 class ClientLogsController < ApplicationController
   def sync
-    api_key = ENV['MERAKI_API_KEY']
+    api_key = ENV["MERAKI_API_KEY"]
     headers = {
       "X-Cisco-Meraki-API-Key" => api_key,
       "Content-Type" => "application/json"
@@ -23,11 +23,12 @@ class ClientLogsController < ApplicationController
         clients = response.parsed_response || []
 
         clients.each do |c|
+          last_seen = c["lastSeen"] || Time.now.to_i
           csv << [
-            ap['serial'],
+            ap["serial"],
             c["mac"],
             c["ip"],
-            c["lastSeen"],
+            last_seen,
             c["usage"]&.dig("total") || 0
           ]
         end
@@ -36,5 +37,4 @@ class ClientLogsController < ApplicationController
 
     render json: { status: "ok", message: "クライアント情報をCSVに保存しました" }
   end
-
 end

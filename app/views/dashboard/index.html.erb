@@ -1,9 +1,10 @@
-<h1 class="text-2xl font-bold mb-4">APごとの接続クライアント数</h1>
-<%= column_chart @ap_counts, height: "400px", library: { title: { text: "接続数", fontSize: 20 } } %>
+<!-- app/views/dashboard/index.html.erb -->
 
-<h2 class="text-xl font-bold mt-8">時系列通信量グラフ</h2>
+<h1 class="text-xl font-bold mb-4">APごとの接続数</h1>
+<%= column_chart @ap_counts, height: "300px", library: { title: { text: "接続数", x: -20 } } %>
 
+<h1 class="text-xl font-bold mt-8 mb-4">APごとの通信量推移</h1>
 <% @ap_timeseries.each do |ap_name, data| %>
-  <h3 class="mt-4 text-lg font-semibold"><%= ap_name %></h3>
-  <%= line_chart data, height: "300px", library: { title: "通信量の推移 (bytes)" } %>
+  <h2 class="mt-6 mb-2 font-semibold"><%= ap_name %></h2>
+  <%= line_chart data, height: "250px", library: { title: { text: "通信量（バイト）" } } %>
 <% end %>

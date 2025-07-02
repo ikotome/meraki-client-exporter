@@ -62,9 +62,15 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem 'httparty'      # Meraki API用
-gem 'dotenv-rails'  # APIキー管理
-gem 'chartkick'
-gem 'groupdate'  # 時系列グラフ用に便利
-gem 'csv'  # CSV操作用
+gem "httparty"      # Meraki API用
+gem "dotenv-rails"  # APIキー管理
+gem "chartkick"
+gem "groupdate"  # 時系列グラフ用に便利
+gem "csv"  # CSV操作用
 gem "tailwindcss-rails"
+
+# Sidekiq
+gem "sidekiq"
+
+# Sidekiqのスケジューラー（cronみたいなやつ）
+gem "sidekiq-scheduler"
