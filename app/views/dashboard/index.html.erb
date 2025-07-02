@@ -1,10 +1,14 @@
-<!-- app/views/dashboard/index.html.erb -->
-
 <h1 class="text-xl font-bold mb-4">APごとの接続数</h1>
-<%= column_chart @ap_counts, height: "300px", library: { title: { text: "接続数", x: -20 } } %>
+<%= column_chart @ap_counts.presence || { "データなし" => 0 }, height: "300px", library: { title: { text: "接続数", x: -20 } } %>
 
 <h1 class="text-xl font-bold mt-8 mb-4">APごとの通信量推移</h1>
-<% @ap_timeseries.each do |ap_name, data| %>
-  <h2 class="mt-6 mb-2 font-semibold"><%= ap_name %></h2>
-  <%= line_chart data, height: "250px", library: { title: { text: "通信量（バイト）" } } %>
+<% if @ap_timeseries.blank? %>
+  <p class="text-gray-500">グラフデータがありません</p>
+<% else %>
+  <% @ap_timeseries.each do |ap_name, data| %>
+    <h2 class="mt-6 mb-2 font-semibold"><%= ap_name %></h2>
+    <%= line_chart data.presence || [["No Data", 0]], height: "250px", library: { title: { text: "通信量（バイト）" } } %>
+  <% end %>
 <% end %>
+
+
